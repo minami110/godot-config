@@ -115,4 +115,4 @@ class QueueData extends RefCounted:
 	##
 	## [return]: -pitch_random から +pitch_random の範囲のランダムなfloat値
 	func get_pitch_random_value() -> float:
-		return 0.0 + randf_range(-pitch_random, pitch_random)
+		return maxf(1.0 + randf_range(-pitch_random, pitch_random), 0.01)
