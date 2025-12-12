@@ -1,60 +1,30 @@
 # CLAUDE.md
 
-Guidance for Claude Code working on this Godot Engine 4.5 visibility control addon.
-
-
-## Project Overview
-
-A Godot Engine 4.5 addon providing visibility control components for node management.
-Includes callback nodes, logic circuits, and animation transitions for declarative visibility control.
+Godot Engine 4.5 config management addon.
 
 
 ## Repository Structure
 
-- `addons/config`: Main plugin code
-- `addons/gdUnit4`: Testing framework, **DO NOT EDIT**
+- `addons/config/`: Plugin code
 - `tests/`: Test files
+- `addons/gdUnit4/`: Testing framework **DO NOT EDIT**
+- `addons/signal_extensions/`: Dependency **DO NOT EDIT**
 
 
-## Documentation Resources
+## Documentation
 
-### Context7 (Godot/GDScript API)
-Query latest Godot Engine and GDScript documentation:
-```
-1. mcp__context7__resolve-library-id: "Godot Engine" or "GDScript 4.5"
-2. mcp__context7__get-library-docs: Use resolved library ID for detailed docs
-```
-
-### DeepWiki (gdUnit4 Framework)
-Query gdUnit4 testing syntax and examples:
-```
-mcp__deepwiki__ask_question: repo="MikeSchulze/gdUnit4" + your question
-```
+- **Godot API**: Context7 `mcp__context7__resolve-library-id` → `mcp__context7__get-library-docs`
+- **gdUnit4**: DeepWiki `mcp__deepwiki__ask_question` (repo: MikeSchulze/gdUnit4)
 
 
-## Development Workflow
+## Development
 
-### Writing Tests
-1. **Check syntax**: Query gdUnit4 via deepwiki before implementation
-2. **Write tests**: Use `/gdscript-test-skill` in `tests/`
-3. **Run tests**: Execute via `/gdscript-test-skill`
-
-### Writing Plugin Code
-1. **Verify API**: Use context7 for latest GDScript/Godot syntax
-2. **Edit files**: Work in `addons/config/`
-3. **Validate**: Use `/gdscript-validate-skill` after changes
-4. **Run tests**: Execute via `/gdscript-test-skill`
-
-### File Operations
-Use `/gdscript-file-manager-skill` for moving, renaming, or deleting GDScript files.
+1. Run tests: `/gdscript-test-skill`
+2. Validate: `/gdscript-validate-skill`
+3. File operations: `/gdscript-file-manager-skill`
 
 
-## Code Guidelines
+## Guidelines
 
-- **YAGNI**: No unnecessary features, abstractions, or configuration
-- **Type Hints**: Follow Godot 4.5 GDScript style guide
-
-
-## PR Guidelines
-- Repository: https://github.com/minami110/godot-config
-- Target branch: origin/main
+- YAGNI: No unnecessary features or abstractions
+- Follow Godot 4.5 GDScript style guide
