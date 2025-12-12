@@ -1,7 +1,7 @@
 extends GdUnitTestSuite
 ## [Test] Config 設定管理クラスのテスト
 
-const ConfigClass := preload("../config.gd")
+const ConfigClass := preload("uid://d3huxhnti6f17")
 
 var _config: ConfigClass
 var _temp_dir: String
