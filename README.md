@@ -5,23 +5,47 @@
 
 Simple config management addon for Godot Engine 4.5.
 
-## Dependencies
 
-- [godot-signal-extensions](https://github.com/minami110/godot-signal-extensions)
+## Config Addon
 
-## Installation
+### Installation
 
 1. Download the latest `.zip` from [Releases](https://github.com/minami110/godot-config/releases)
 2. Extract and copy `addons/config/` into your project's `addons/` folder
 3. Install the dependency: [godot-signal-extensions](https://github.com/minami110/godot-signal-extensions)
 
-## Usage
-
-### Config
+### Usage
 
 Register `res://addons/config/config.gd` as an Autoload, or
 
 ```gdscript
 # Instantiate config.gd where needed.
 var config_api: = preload("uid://d3huxhnti6f17").new()
+```
+
+## SoundManager Addon
+
+### Installation
+
+1. Download the latest `.zip` from [Releases](https://github.com/minami110/godot-config/releases)
+2. Extract and copy `addons/sound_manager/` into your project's `addons/` folde
+
+### Usage
+#### SoundManager (1D)
+Register `res://addons/sound_manager/sound_manager.gd` as an Autoload, or
+
+```gdscript
+# Instantiate sound_manager.gd where needed.
+var sound_manager := preload("uid://dm62b6nbuomns").new()
+add_child(sound_manager)
+```
+
+#### SoundManager2D
+
+Register `res://addons/sound_manager/sound_manager_2d.gd` as an Autoload, or
+
+```gdscript
+# Instantiate sound_manager_2d.gd where needed.
+var sound_manager_2d := preload("uid://draswj50w43o8").new()
+add_child(sound_manager_2d)
 ```

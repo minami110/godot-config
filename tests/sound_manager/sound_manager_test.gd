@@ -131,17 +131,17 @@ func test_queue_data_is_valid_returns_true_when_stream_is_set() -> void:
 	assert_bool(queue_data.is_valid()).is_true()
 
 
-func test_queue_data_get_pitch_random_value_returns_zero_when_no_randomization() -> void:
+func test_queue_data_get_pitch_random_value_returns_base_pitch_when_no_randomization() -> void:
 	var queue_data := BaseSoundManagerClass.QueueData.new(_mock_stream, 0.0, 0.0)
-	assert_float(queue_data.get_pitch_random_value()).is_equal(0.0)
+	assert_float(queue_data.get_pitch_random_value()).is_equal(1.0)
 
 
 func test_queue_data_get_pitch_random_value_returns_value_in_range() -> void:
 	var queue_data := BaseSoundManagerClass.QueueData.new(_mock_stream, 0.0, 0.5)
 	var pitch_value := queue_data.get_pitch_random_value()
 
-	# -0.5 から 0.5 の範囲に収まっているか確認
-	assert_float(pitch_value).is_greater_equal(-0.5)
-	assert_float(pitch_value).is_less_equal(0.5)
+	# 1.0 + (-0.5 ~ 0.5) = 0.5 から 1.5 の範囲に収まっているか確認
+	assert_float(pitch_value).is_greater_equal(0.5)
+	assert_float(pitch_value).is_less_equal(1.5)
 
 #endregion
