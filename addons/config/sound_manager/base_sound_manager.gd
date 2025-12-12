@@ -2,6 +2,17 @@
 extends Node
 ## [Infrastructure Layer]
 ## サウンドマネージャーの共通基底クラス
+##
+## サウンドを効率的に再生するための抽象基底クラスです。
+## 内部的にキューシステムを使用し、複数のサウンドを同時に再生可能にします。
+##
+## [b]特徴:[/b]
+## - プレイヤープール: 8個のAudioStreamPlayerを事前に作成
+## - キューサイズ: 最大32個のサウンドをキューイング可能
+## - ポーズ無効: ゲームポーズ中でも動作 ([code]PROCESS_MODE_ALWAYS[/code])
+##
+## [b]サブクラス実装:[/b]
+## サブクラスは [method _create_player] と [method _play_from_queue] を実装する必要があります。
 
 const _QUEUE_SIZE: int = 32
 const _PLAYER_COUNT: int = 8
@@ -91,9 +102,17 @@ class QueueData extends RefCounted:
 		force_play = p_force_play
 
 
+	## キューデータが有効かどうかを検証します。
+	##
+	## [return]: オーディオストリームが設定されている場合は[code]true[/code]、それ以外は[code]false[/code]
 	func is_valid() -> bool:
 		return stream != null
 
 
+	## ランダム化されたピッチ値を取得します。
+	##
+	## [param pitch_random]で指定された範囲内でランダムなピッチ値を生成します。
+	##
+	## [return]: -pitch_random から +pitch_random の範囲のランダムなfloat値
 	func get_pitch_random_value() -> float:
 		return 0.0 + randf_range(-pitch_random, pitch_random)
