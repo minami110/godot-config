@@ -17,7 +17,9 @@ Simple config management addon for Godot Engine 4.5.
 
 ## Usage
 
-Register `config.gd` as an Autoload, or
+### Config
+
+Register `res://addons/config/config.gd` as an Autoload, or
 
 ```gdscript
 # Instantiate config.gd where needed.
