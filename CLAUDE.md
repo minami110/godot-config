@@ -6,6 +6,8 @@ Godot Engine 4.5 config management addon.
 ## Repository Structure
 
 - `addons/config/`: Plugin code
+- `addons/pool/`: Plugin code
+- `addons/audio_manager/`: Plugin code
 - `tests/`: Test files
 - `addons/gdUnit4/`: Testing framework **DO NOT EDIT**
 - `addons/signal_extensions/`: Dependency **DO NOT EDIT**
