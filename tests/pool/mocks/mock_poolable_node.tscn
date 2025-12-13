@@ -1,0 +1,6 @@
+[gd_scene load_steps=2 format=3 uid="uid://beq3u1i1f3eyi"]
+
+[ext_resource type="Script" uid="uid://btbk2fdw857fv" path="res://tests/pool/mocks/mock_poolable_node.gd" id="1_gbexn"]
+
+[node name="MockPoolableNode" type="Node2D"]
+script = ExtResource("1_gbexn")
