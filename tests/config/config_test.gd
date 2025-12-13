@@ -86,6 +86,17 @@ func test_get_local_setting_returns_value() -> void:
 	var result: Variant = _config.get_local_setting("volume")
 	assert_int(result).is_equal(80)
 
+
+func test_get_local_setting_returns_default_when_not_exist() -> void:
+	var result: Variant = _config.get_local_setting("volume", 50)
+	assert_int(result).is_equal(50)
+
+
+func test_get_local_setting_returns_value_not_default_when_exist() -> void:
+	_config.create_local_setting("volume", 80)
+	var result: Variant = _config.get_local_setting("volume", 50)
+	assert_int(result).is_equal(80) # デフォルト値ではなく実際の値
+
 #endregion
 
 #region Sync設定のテスト (create_sync_setting)
@@ -133,6 +144,17 @@ func test_get_sync_setting_returns_value() -> void:
 	_config.create_sync_setting("score", 1000)
 	var result: Variant = _config.get_sync_setting("score")
 	assert_int(result).is_equal(1000)
+
+
+func test_get_sync_setting_returns_default_when_not_exist() -> void:
+	var result: Variant = _config.get_sync_setting("score", 500)
+	assert_int(result).is_equal(500)
+
+
+func test_get_sync_setting_returns_value_not_default_when_exist() -> void:
+	_config.create_sync_setting("score", 1000)
+	var result: Variant = _config.get_sync_setting("score", 500)
+	assert_int(result).is_equal(1000) # デフォルト値ではなく実際の値
 
 #endregion
 
@@ -258,7 +280,7 @@ func test_create_local_setting_with_custom_filename() -> void:
 	assert_bool(result).is_true()
 	assert_bool(_config.has_local_setting("language", "preferences")).is_true()
 
-	var value: Variant = _config.get_local_setting("language", "preferences")
+	var value: Variant = _config.get_local_setting("language", "none", "preferences")
 	assert_str(value).is_equal("en")
 
 
@@ -267,7 +289,7 @@ func test_create_sync_setting_with_custom_filename() -> void:
 	assert_bool(result).is_true()
 	assert_bool(_config.has_sync_setting("level", "progress")).is_true()
 
-	var value: Variant = _config.get_sync_setting("level", "progress")
+	var value: Variant = _config.get_sync_setting("level", -1, "progress")
 	assert_int(value).is_equal(5)
 
 #endregion

@@ -18,7 +18,7 @@ var _user_id: String
 var _is_initialized: bool = false
 
 # Config Properties
-# キー構造: {filename: {setting_name: ReactiveProperty}}
+# キー構造: {filename: {setting_name: SettingProperty}}
 var _local_properties: Dictionary[String, Dictionary] = { }
 var _sync_properties: Dictionary[String, Dictionary] = { }
 
@@ -61,13 +61,14 @@ func has_local_setting(name: String, filename: String = "local") -> bool:
 ## Local設定を取得
 ##
 ## @param name 設定キー名
+## @param default_value デフォルト値（設定が存在しない場合に返す値）
 ## @param filename 設定ファイル名（拡張子なし、デフォルト: "local"）
-## @return 設定値（Variant）または null（設定が存在しない場合）
+## @return 設定値（Variant）または default_value（設定が存在しない場合）
 @warning_ignore("shadowed_variable_base_class")
-func get_local_setting(name: String, filename: String = "local") -> Variant:
+func get_local_setting(name: String, default_value: Variant = null, filename: String = "local") -> Variant:
 	if has_local_setting(name, filename):
 		return _local_properties[filename][name].get_value()
-	return null
+	return default_value
 
 
 ## Local設定を作成
@@ -104,13 +105,14 @@ func has_sync_setting(name: String, filename: String = "sync") -> bool:
 ## Sync設定を取得
 ##
 ## @param name 設定キー名
+## @param default_value デフォルト値（設定が存在しない場合に返す値）
 ## @param filename 設定ファイル名（拡張子なし、デフォルト: "sync"）
-## @return 設定値（Variant）または null（設定が存在しない場合）
+## @return 設定値（Variant）または default_value（設定が存在しない場合）
 @warning_ignore("shadowed_variable_base_class")
-func get_sync_setting(name: String, filename: String = "sync") -> Variant:
+func get_sync_setting(name: String, default_value: Variant = null, filename: String = "sync") -> Variant:
 	if has_sync_setting(name, filename):
 		return _sync_properties[filename][name].get_value()
-	return null
+	return default_value
 
 
 ## Sync設定を作成
@@ -163,13 +165,12 @@ func save_sync(filename: String = "sync") -> bool:
 ## @param name 設定キー名
 ## @param value 設定する値
 ## @param filename 設定ファイル名（拡張子なし、デフォルト: "local"）
-## @return 設定が存在する場合はtrue、存在しない場合はfalse
 @warning_ignore("shadowed_variable_base_class")
-func set_local_setting(name: String, value: Variant, filename: String = "local") -> bool:
+func set_local_setting(name: String, value: Variant, filename: String = "local") -> void:
 	if not has_local_setting(name, filename):
-		return false
+		push_warning("[Config] Setting '%s' does not exist in file '%s'. Use create_local_setting() first." % [name, filename])
+		return
 	_local_properties[filename][name].set_value(value)
-	return true
 
 
 ## Sync設定の値を設定
@@ -177,13 +178,12 @@ func set_local_setting(name: String, value: Variant, filename: String = "local")
 ## @param name 設定キー名
 ## @param value 設定する値
 ## @param filename 設定ファイル名（拡張子なし、デフォルト: "sync"）
-## @return 設定が存在する場合はtrue、存在しない場合はfalse
 @warning_ignore("shadowed_variable_base_class")
-func set_sync_setting(name: String, value: Variant, filename: String = "sync") -> bool:
+func set_sync_setting(name: String, value: Variant, filename: String = "sync") -> void:
 	if not has_sync_setting(name, filename):
-		return false
+		push_warning("[Config] Setting '%s' does not exist in file '%s'. Use create_sync_setting() first." % [name, filename])
+		return
 	_sync_properties[filename][name].set_value(value)
-	return true
 
 
 ## Local設定の変更を購読
@@ -368,7 +368,7 @@ func _load_local_config(filename: String) -> bool:
 	if config == null:
 		return false
 
-	# ファイルから設定値を読み込み、ReactivePropertyを動的生成
+	# ファイルから設定値を読み込み、SettingPropertyを動的生成
 	if not _local_properties.has(filename):
 		_local_properties[filename] = { }
 
@@ -395,7 +395,7 @@ func _load_sync_config(filename: String) -> bool:
 	if config == null:
 		return false
 
-	# ファイルから設定値を読み込み、ReactivePropertyを動的生成
+	# ファイルから設定値を読み込み、SettingPropertyを動的生成
 	if not _sync_properties.has(filename):
 		_sync_properties[filename] = { }
 
