@@ -12,7 +12,6 @@ Simple config management addon for Godot Engine 4.5.
 
 1. Download the latest `.zip` from [Releases](https://github.com/minami110/godot-essentials/releases)
 2. Extract and copy `addons/config/` into your project's `addons/` folder
-3. Install the dependency: [godot-signal-extensions](https://github.com/minami110/godot-signal-extensions)
 
 ### Usage
 

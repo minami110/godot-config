@@ -17,6 +17,7 @@ extends Node
 var queue_size: int = 32
 var player_count: int = 8
 var bus: StringName = &"Master"
+var push_warning_on_full_queue: bool = false
 
 var _available_players: Array[Node] = []
 var _queue: Array[QueueData] = []
@@ -82,7 +83,8 @@ func _queue_sound(data: QueueData) -> void:
 		_queue.push_back(data)
 
 	else:
-		push_warning("[BaseSoundManager] Sound queue is full. Sound request ignored.")
+		if push_warning_on_full_queue:
+			push_warning("[BaseSoundManager] Sound queue is full. Sound request ignored.")
 
 #endregion
 
