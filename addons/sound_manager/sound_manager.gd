@@ -22,7 +22,7 @@ extends "base_sound_manager.gd"
 ## AudioStreamPlayer を作成
 func _create_player() -> Node:
 	var player := AudioStreamPlayer.new()
-	player.bus = &"Sfx"
+	player.bus = bus
 	return player
 
 

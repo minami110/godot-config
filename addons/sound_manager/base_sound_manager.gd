@@ -14,8 +14,9 @@ extends Node
 ## [b]サブクラス実装:[/b]
 ## サブクラスは [method _create_player] と [method _play_from_queue] を実装する必要があります。
 
-const _QUEUE_SIZE: int = 32
-const _PLAYER_COUNT: int = 8
+var queue_size: int = 32
+var player_count: int = 8
+var bus: StringName = &"Master"
 
 var _available_players: Array[Node] = []
 var _queue: Array[QueueData] = []
@@ -28,7 +29,7 @@ func _notification(what: int) -> void:
 			# ポーズ中でも動作する
 			process_mode = Node.PROCESS_MODE_ALWAYS
 
-			for i in range(_PLAYER_COUNT):
+			for i in range(player_count):
 				var player := _create_player()
 				assert(player != null)
 				assert(player is AudioStreamPlayer or player is AudioStreamPlayer2D)
@@ -69,7 +70,7 @@ func _queue_sound(data: QueueData) -> void:
 		push_warning("[BaseSoundManager] Invalid sound data passed to _queue_sound.")
 		return
 
-	if not _available_players.is_empty() and _queue.size() < _QUEUE_SIZE:
+	if not _available_players.is_empty() and _queue.size() < queue_size:
 		_queue.push_back(data)
 
 	# キューが満杯の場合でも、強制再生フラグが立っていれば先頭を削除して追加
