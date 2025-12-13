@@ -13,7 +13,13 @@ var _service: PoolService
 func before_test() -> void:
 	_pool_container = auto_free(Node.new())
 	add_child(_pool_container)
-	_service = auto_free(PoolService.new(_pool_container, NOTIFICATION_EXIT_POOL, NOTIFICATION_ENTER_POOL))
+	_service = auto_free(
+		PoolService.new(
+			_pool_container,
+			NOTIFICATION_EXIT_POOL,
+			NOTIFICATION_ENTER_POOL,
+		),
+	)
 
 
 func after_test() -> void:
