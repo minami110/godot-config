@@ -40,9 +40,18 @@ var _scene_cache: Dictionary[String, PackedScene] = { }
 ## プールの親ノード（非表示でノードを保持）
 var _pool_container: Node = null
 
+var _notification_exit_pool: int = 0
+var _notification_enter_pool: int = 0
 
-func _init(parent: Node) -> void:
+
+func _init(
+		parent: Node,
+		notification_exit_pool: int = 0,
+		notification_enter_pool: int = 0,
+) -> void:
 	_pool_container = parent
+	_notification_exit_pool = notification_exit_pool
+	_notification_enter_pool = notification_enter_pool
 
 
 ## スコープ名を正規化する
@@ -85,7 +94,8 @@ func rent_node(scene_path: String, scope: StringName = &"") -> Node:
 		node = scene.instantiate()
 
 	# 通知を送る (ユーザービリティの観点で, 新規作成時にも送信する)
-	node.notification(Pool.NOTIFICATION_EXIT_POOL)
+	if _notification_exit_pool > 0:
+		node.notification(_notification_exit_pool)
 
 	# スコープマップに登録
 	node.set_meta(_SCOPE_KEY, _normalize_scope(scope))
@@ -125,7 +135,8 @@ func return_node(node: Node) -> void:
 		node.get_parent().remove_child(node)
 
 	# 通知を送る
-	node.notification(Pool.NOTIFICATION_ENTER_POOL)
+	if _notification_enter_pool > 0:
+		node.notification(_notification_enter_pool)
 
 	var node_pool: NodePool = _pools[scope][scene_path]
 
@@ -160,7 +171,8 @@ func preload_scene(
 		var node: Node = scene.instantiate()
 
 		# 通知を送る
-		node.notification(Pool.NOTIFICATION_ENTER_POOL)
+		if _notification_enter_pool > 0:
+			node.notification(_notification_enter_pool)
 
 		# NodePool に追加（内部で add_child される）
 		pool.add_preloaded_node(node)

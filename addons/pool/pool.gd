@@ -21,7 +21,7 @@ var _service: PoolService
 func _notification(what: int) -> void:
 	match what:
 		NOTIFICATION_READY:
-			_service = PoolService.new(self)
+			_service = PoolService.new(self, NOTIFICATION_EXIT_POOL, NOTIFICATION_ENTER_POOL)
 			_register_performance_monitors()
 
 
