@@ -26,6 +26,9 @@ var _queue: Array[QueueData] = []
 func _notification(what: int) -> void:
 	match what:
 		NOTIFICATION_READY:
+			assert(queue_size > 0)
+			assert(player_count > 0)
+
 			# ポーズ中でも動作する
 			process_mode = Node.PROCESS_MODE_ALWAYS
 
