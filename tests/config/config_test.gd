@@ -55,8 +55,8 @@ func test_create_local_setting_returns_false_on_duplicate() -> void:
 
 func test_create_local_setting_stores_default_value() -> void:
 	_config.create_local_setting("volume", 80)
-	var prop: ReactiveProperty = _config.get_local_setting("volume")
-	assert_int(prop.value).is_equal(80)
+	var value: Variant = _config.get_local_setting("volume")
+	assert_int(value).is_equal(80)
 
 #endregion
 
@@ -77,15 +77,14 @@ func test_has_local_setting_returns_true_after_create() -> void:
 #region Local設定のテスト (get_local_setting)
 
 func test_get_local_setting_returns_null_when_not_exist() -> void:
-	var result: ReactiveProperty = _config.get_local_setting("volume")
+	var result: Variant = _config.get_local_setting("volume")
 	assert_object(result).is_null()
 
 
-func test_get_local_setting_returns_reactive_property() -> void:
+func test_get_local_setting_returns_value() -> void:
 	_config.create_local_setting("volume", 80)
-	var result: ReactiveProperty = _config.get_local_setting("volume")
-	assert_object(result).is_not_null()
-	assert_object(result).is_instanceof(ReactiveProperty)
+	var result: Variant = _config.get_local_setting("volume")
+	assert_int(result).is_equal(80)
 
 #endregion
 
@@ -104,8 +103,8 @@ func test_create_sync_setting_returns_false_on_duplicate() -> void:
 
 func test_create_sync_setting_stores_default_value() -> void:
 	_config.create_sync_setting("score", 1000)
-	var prop: ReactiveProperty = _config.get_sync_setting("score")
-	assert_int(prop.value).is_equal(1000)
+	var value: Variant = _config.get_sync_setting("score")
+	assert_int(value).is_equal(1000)
 
 #endregion
 
@@ -126,15 +125,14 @@ func test_has_sync_setting_returns_true_after_create() -> void:
 #region Sync設定のテスト (get_sync_setting)
 
 func test_get_sync_setting_returns_null_when_not_exist() -> void:
-	var result: ReactiveProperty = _config.get_sync_setting("score")
+	var result: Variant = _config.get_sync_setting("score")
 	assert_object(result).is_null()
 
 
-func test_get_sync_setting_returns_reactive_property() -> void:
+func test_get_sync_setting_returns_value() -> void:
 	_config.create_sync_setting("score", 1000)
-	var result: ReactiveProperty = _config.get_sync_setting("score")
-	assert_object(result).is_not_null()
-	assert_object(result).is_instanceof(ReactiveProperty)
+	var result: Variant = _config.get_sync_setting("score")
+	assert_int(result).is_equal(1000)
 
 #endregion
 
@@ -233,8 +231,8 @@ func test_saved_local_config_is_loaded_on_initialize() -> void:
 
 	# 設定が読み込まれているか確認
 	assert_bool(new_config.has_local_setting("volume")).is_true()
-	var prop: ReactiveProperty = new_config.get_local_setting("volume")
-	assert_int(prop.value).is_equal(80)
+	var value: Variant = new_config.get_local_setting("volume")
+	assert_int(value).is_equal(80)
 
 
 func test_saved_sync_config_is_loaded_on_initialize() -> void:
@@ -248,8 +246,8 @@ func test_saved_sync_config_is_loaded_on_initialize() -> void:
 
 	# 設定が読み込まれているか確認
 	assert_bool(new_config.has_sync_setting("score")).is_true()
-	var prop: ReactiveProperty = new_config.get_sync_setting("score")
-	assert_int(prop.value).is_equal(1000)
+	var value: Variant = new_config.get_sync_setting("score")
+	assert_int(value).is_equal(1000)
 
 #endregion
 
@@ -260,8 +258,8 @@ func test_create_local_setting_with_custom_filename() -> void:
 	assert_bool(result).is_true()
 	assert_bool(_config.has_local_setting("language", "preferences")).is_true()
 
-	var prop: ReactiveProperty = _config.get_local_setting("language", "preferences")
-	assert_str(prop.value).is_equal("en")
+	var value: Variant = _config.get_local_setting("language", "preferences")
+	assert_str(value).is_equal("en")
 
 
 func test_create_sync_setting_with_custom_filename() -> void:
@@ -269,7 +267,7 @@ func test_create_sync_setting_with_custom_filename() -> void:
 	assert_bool(result).is_true()
 	assert_bool(_config.has_sync_setting("level", "progress")).is_true()
 
-	var prop: ReactiveProperty = _config.get_sync_setting("level", "progress")
-	assert_int(prop.value).is_equal(5)
+	var value: Variant = _config.get_sync_setting("level", "progress")
+	assert_int(value).is_equal(5)
 
 #endregion

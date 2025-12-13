@@ -8,6 +8,8 @@ extends Node
 ## このクラスは Config autoload として直接アクセスしてください。
 ## 例: Config.is_local_config_exist()
 
+const SettingProperty := preload("internal/setting_property.gd")
+
 ## 設定ファイル内のセクション名（フラット構造）
 const _SETTINGS_SECTION := "Settings"
 
@@ -60,11 +62,11 @@ func has_local_setting(name: String, filename: String = "local") -> bool:
 ##
 ## @param name 設定キー名
 ## @param filename 設定ファイル名（拡張子なし、デフォルト: "local"）
-## @return ReactiveProperty または null（設定が存在しない場合）
+## @return 設定値（Variant）または null（設定が存在しない場合）
 @warning_ignore("shadowed_variable_base_class")
-func get_local_setting(name: String, filename: String = "local") -> ReactiveProperty:
+func get_local_setting(name: String, filename: String = "local") -> Variant:
 	if has_local_setting(name, filename):
-		return _local_properties[filename][name]
+		return _local_properties[filename][name].get_value()
 	return null
 
 
@@ -83,7 +85,7 @@ func create_local_setting(name: String, default_value: Variant, filename: String
 	if not _local_properties.has(filename):
 		_local_properties[filename] = { }
 
-	_local_properties[filename][name] = ReactiveProperty.new(default_value)
+	_local_properties[filename][name] = SettingProperty.new(default_value)
 	return true
 
 
@@ -103,11 +105,11 @@ func has_sync_setting(name: String, filename: String = "sync") -> bool:
 ##
 ## @param name 設定キー名
 ## @param filename 設定ファイル名（拡張子なし、デフォルト: "sync"）
-## @return ReactiveProperty または null（設定が存在しない場合）
+## @return 設定値（Variant）または null（設定が存在しない場合）
 @warning_ignore("shadowed_variable_base_class")
-func get_sync_setting(name: String, filename: String = "sync") -> ReactiveProperty:
+func get_sync_setting(name: String, filename: String = "sync") -> Variant:
 	if has_sync_setting(name, filename):
-		return _sync_properties[filename][name]
+		return _sync_properties[filename][name].get_value()
 	return null
 
 
@@ -126,7 +128,7 @@ func create_sync_setting(name: String, default_value: Variant, filename: String 
 	if not _sync_properties.has(filename):
 		_sync_properties[filename] = { }
 
-	_sync_properties[filename][name] = ReactiveProperty.new(default_value)
+	_sync_properties[filename][name] = SettingProperty.new(default_value)
 	return true
 
 
@@ -154,6 +156,72 @@ func save_local(filename: String = "local") -> bool:
 
 func save_sync(filename: String = "sync") -> bool:
 	return _save_sync_config(filename)
+
+
+## Local設定の値を設定
+##
+## @param name 設定キー名
+## @param value 設定する値
+## @param filename 設定ファイル名（拡張子なし、デフォルト: "local"）
+## @return 設定が存在する場合はtrue、存在しない場合はfalse
+@warning_ignore("shadowed_variable_base_class")
+func set_local_setting(name: String, value: Variant, filename: String = "local") -> bool:
+	if not has_local_setting(name, filename):
+		return false
+	_local_properties[filename][name].set_value(value)
+	return true
+
+
+## Sync設定の値を設定
+##
+## @param name 設定キー名
+## @param value 設定する値
+## @param filename 設定ファイル名（拡張子なし、デフォルト: "sync"）
+## @return 設定が存在する場合はtrue、存在しない場合はfalse
+@warning_ignore("shadowed_variable_base_class")
+func set_sync_setting(name: String, value: Variant, filename: String = "sync") -> bool:
+	if not has_sync_setting(name, filename):
+		return false
+	_sync_properties[filename][name].set_value(value)
+	return true
+
+
+## Local設定の変更を購読
+##
+## @param name 設定キー名
+## @param callback コールバック関数（引数: Variant）
+## @param filename 設定ファイル名（拡張子なし、デフォルト: "local"）
+## @return ConfigSubscription（購読オブジェクト）または null（設定が存在しない場合）
+@warning_ignore("shadowed_variable_base_class")
+func subscribe_local_setting(
+		name: String,
+		callback: Callable,
+		filename: String = "local",
+) -> ConfigSubscription:
+	if not has_local_setting(name, filename):
+		return null
+	var prop: RefCounted = _local_properties[filename][name]
+	callback.call(prop.get_value()) # 即座に現在値で呼び出し
+	return ConfigSubscription.new(prop.value_changed, callback)
+
+
+## Sync設定の変更を購読
+##
+## @param name 設定キー名
+## @param callback コールバック関数（引数: Variant）
+## @param filename 設定ファイル名（拡張子なし、デフォルト: "sync"）
+## @return ConfigSubscription（購読オブジェクト）または null（設定が存在しない場合）
+@warning_ignore("shadowed_variable_base_class")
+func subscribe_sync_setting(
+		name: String,
+		callback: Callable,
+		filename: String = "sync",
+) -> ConfigSubscription:
+	if not has_sync_setting(name, filename):
+		return null
+	var prop: RefCounted = _sync_properties[filename][name]
+	callback.call(prop.get_value()) # 即座に現在値で呼び出し
+	return ConfigSubscription.new(prop.value_changed, callback)
 
 
 ## 設定を保存
@@ -309,10 +377,10 @@ func _load_local_config(filename: String) -> bool:
 			var loaded_value: Variant = config.get_value(_SETTINGS_SECTION, key)
 			if _local_properties[filename].has(key):
 				# 既存のプロパティがあれば値を更新
-				_local_properties[filename][key].value = loaded_value
+				_local_properties[filename][key].set_value(loaded_value)
 			else:
 				# なければ新規作成
-				_local_properties[filename][key] = ReactiveProperty.new(loaded_value)
+				_local_properties[filename][key] = SettingProperty.new(loaded_value)
 
 	return true
 
@@ -336,10 +404,10 @@ func _load_sync_config(filename: String) -> bool:
 			var loaded_value: Variant = config.get_value(_SETTINGS_SECTION, key)
 			if _sync_properties[filename].has(key):
 				# 既存のプロパティがあれば値を更新
-				_sync_properties[filename][key].value = loaded_value
+				_sync_properties[filename][key].set_value(loaded_value)
 			else:
 				# なければ新規作成
-				_sync_properties[filename][key] = ReactiveProperty.new(loaded_value)
+				_sync_properties[filename][key] = SettingProperty.new(loaded_value)
 
 	return true
 
@@ -358,7 +426,7 @@ func _save_local_config(filename: String) -> bool:
 	# 設定値をConfigFileに保存
 	if _local_properties.has(filename):
 		for key: String in _local_properties[filename]:
-			config.set_value(_SETTINGS_SECTION, key, _local_properties[filename][key].value)
+			config.set_value(_SETTINGS_SECTION, key, _local_properties[filename][key].get_value())
 
 	# ディレクトリの存在確認と作成
 	if not _ensure_directory_exists(dir_path):
@@ -382,7 +450,7 @@ func _save_sync_config(filename: String) -> bool:
 	# 設定値をConfigFileに保存
 	if _sync_properties.has(filename):
 		for key: String in _sync_properties[filename]:
-			config.set_value(_SETTINGS_SECTION, key, _sync_properties[filename][key].value)
+			config.set_value(_SETTINGS_SECTION, key, _sync_properties[filename][key].get_value())
 
 	# ディレクトリの存在確認と作成
 	if not _ensure_directory_exists(dir_path):
