@@ -3,6 +3,8 @@ extends GdUnitTestSuite
 
 const PoolService := preload("uid://b2e6gvs6mm8by")
 const MOCK_SCENE_PATH: String = "res://tests/pool/mocks/mock_poolable_node.tscn"
+const NOTIFICATION_EXIT_POOL: int = 500000
+const NOTIFICATION_ENTER_POOL: int = 500001
 
 var _pool_container: Node
 var _service: PoolService
@@ -11,7 +13,7 @@ var _service: PoolService
 func before_test() -> void:
 	_pool_container = auto_free(Node.new())
 	add_child(_pool_container)
-	_service = auto_free(PoolService.new(_pool_container))
+	_service = auto_free(PoolService.new(_pool_container, NOTIFICATION_EXIT_POOL, NOTIFICATION_ENTER_POOL))
 
 
 func after_test() -> void:

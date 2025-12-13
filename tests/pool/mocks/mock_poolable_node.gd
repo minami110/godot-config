@@ -3,7 +3,8 @@ extends Node2D
 ##
 ## テスト用に Pool 通知とライフサイクルの呼び出し順序を記録する。
 
-const Pool := preload("uid://mxd1go2i1jv3")
+const NOTIFICATION_EXIT_POOL: int = 500000
+const NOTIFICATION_ENTER_POOL: int = 500001
 
 ## プール内にいるかどうかを示すフラグ
 var in_pool: bool = false
@@ -14,10 +15,10 @@ var call_order: Array[String] = []
 
 func _notification(what: int) -> void:
 	match what:
-		Pool.NOTIFICATION_EXIT_POOL:
+		NOTIFICATION_EXIT_POOL:
 			in_pool = false
 			call_order.append("NOTIFICATION_EXIT_POOL")
-		Pool.NOTIFICATION_ENTER_POOL:
+		NOTIFICATION_ENTER_POOL:
 			in_pool = true
 			call_order.append("NOTIFICATION_ENTER_POOL")
 		NOTIFICATION_ENTER_TREE:
